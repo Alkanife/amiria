@@ -5,6 +5,9 @@ import fr.alkanife.amiria.*;
 import fr.alkanife.amiria.characters.Character;
 import fr.alkanife.amiria.characters.Characters;
 import fr.alkanife.amiria.music.Music;
+import fr.alkanife.botcommons.Command;
+import fr.alkanife.botcommons.Lang;
+import fr.alkanife.botcommons.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
@@ -82,9 +85,20 @@ public class Commands {
                 switch (words[1]) {
                     case "translations":
                         Amiria.getLogger().info("Reloading translations");
-                        String tResult = new StatusReport().checkTranslations(!Lang.load()).getStatus();
+                        //String tResult = new StatusReport().checkTranslations(!Lang.load()).getStatus();
+
+                        StatusReport statusReport = new StatusReport();
+
+                        try {
+                            Lang.load();
+                            statusReport.checkTranslations();
+                        } catch (Exception exception) {
+                            statusReport.checkTranslations(true);
+                            Amiria.getLogger().error("Failed to load translations", exception);
+                        }
+
                         slashCommandEvent.reply(new MessageBuilder("`[reload]- Rechargement des traductions effectué. Résultat :`")
-                                .setEmbed(new EmbedBuilder().setDescription(tResult).build()).build()).queue();
+                                .setEmbed(new EmbedBuilder().setDescription(statusReport.getStatus()).build()).build()).queue();
                         Amiria.getLogger().info(Lang.getTranslations().size() + " (re)loaded translations");
                         break;
 

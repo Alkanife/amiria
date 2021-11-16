@@ -1,9 +1,11 @@
 package fr.alkanife.amiria;
 
 import fr.alkanife.amiria.characters.Characters;
-import fr.alkanife.amiria.commands.CommandHandler;
+import fr.alkanife.amiria.commands.Handler;
 import fr.alkanife.amiria.commands.Commands;
 import fr.alkanife.amiria.music.Music;
+import fr.alkanife.botcommons.Lang;
+import fr.alkanife.botcommons.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
@@ -179,7 +181,13 @@ public class Events extends ListenerAdapter {
         StatusReport statusReport = new StatusReport().version().newLine();
 
         Amiria.getLogger().info("Loading translations");
-        statusReport.checkTranslations(!Lang.load());
+        try {
+            Lang.load();
+            statusReport.checkTranslations();
+        } catch (Exception exception) {
+            statusReport.checkTranslations(true);
+            Amiria.getLogger().error("Failed to load translations", exception);
+        }
         Amiria.getLogger().info(Lang.getTranslations().size() + " loaded translations");
 
         Amiria.getLogger().info("Loading characters");
@@ -187,14 +195,14 @@ public class Events extends ListenerAdapter {
         Amiria.getLogger().info(Characters.getCharacters().size() + " loaded characters");
 
         Amiria.getLogger().info("Setting up commands");
-        CommandHandler.registerCommands(new Commands());
+        Amiria.getHandler().registerCommands(new Commands());
         statusReport.checkCommands();
-        Amiria.getLogger().info(CommandHandler.getCommands().size() + " loaded commands");
+        Amiria.getLogger().info(Amiria.getHandler().getCommands().size() + " loaded commands");
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Mise en tension réussie");
         embedBuilder.setDescription("**État des différents services :**\n" + statusReport.getStatus());
-        embedBuilder.setThumbnail(Utils.getOKMemeURL());
+        embedBuilder.setThumbnail(Amiria.getOKMemeURL());
         embedBuilder.setColor(new Color(150, 224, 136));
         Amiria.broadLog(embedBuilder.build());
 
@@ -203,7 +211,7 @@ public class Events extends ListenerAdapter {
 
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
-        CommandHandler.redirect(event);
+        Amiria.getHandler().handle(event);
     }
 
     @Override

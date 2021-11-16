@@ -3,13 +3,11 @@ package fr.alkanife.amiria.characters;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fr.alkanife.amiria.Amiria;
-import fr.alkanife.amiria.Utils;
+import fr.alkanife.botcommons.Utils;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;

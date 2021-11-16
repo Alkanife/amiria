@@ -1,7 +1,9 @@
 package fr.alkanife.amiria;
 
 import fr.alkanife.amiria.characters.Characters;
-import fr.alkanife.amiria.commands.CommandHandler;
+import fr.alkanife.amiria.commands.Handler;
+import fr.alkanife.botcommons.Lang;
+import fr.alkanife.botcommons.Utils;
 
 public class StatusReport {
 
@@ -83,11 +85,11 @@ public class StatusReport {
     }
 
     public StatusReport checkCommands() {
-        if (CommandHandler.getCommands().size() == 0) {
+        if (Amiria.getHandler().getCommands().size() == 0) {
             Amiria.getLogger().warn("No commands loaded");
             status += " ⚠️ Aucune commande n'a été chargé\n";
         } else {
-            status += " ✅ `" + CommandHandler.getCommands().size() + "` commandes ont été chargés\n";
+            status += " ✅ `" + Amiria.getHandler().getCommands().size() + "` commandes ont été chargés\n";
         }
 
         return this;
